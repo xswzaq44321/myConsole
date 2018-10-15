@@ -52,9 +52,10 @@ namespace myConsole
 				}
 				catch (Exception err)
 				{
+					Color temp = richTextBox_message.ForeColor;
 					richTextBox_message.SelectionColor = Color.Red;
 					richTextBox_message.AppendText("\r\nError: " + err.Message + "\r\n\r\n");
-					richTextBox_message.SelectionColor = Color.Black;
+					richTextBox_message.SelectionColor = temp;
 				}
 				//viewBox.AppendText(res.Number + "\r\n");
 				richTextBox_message.AppendText("> ");
