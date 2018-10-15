@@ -8,10 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MoonSharp.Interpreter;
+using MetroFramework.Forms;
 
 namespace myConsole
 {
-	public partial class console : Form
+	public partial class console : MetroForm
 	{
 		public console()
 		{
@@ -25,7 +26,7 @@ namespace myConsole
 
 			sub = new Form2();
 			sub.Show();
-
+			
 			script.Globals["newLabel"] = (Action<string>)((string msg) => sub.foo(msg));
 		}
 
@@ -45,19 +46,26 @@ namespace myConsole
 					prevCommandsIter = prevCommands.Count;
 				}
 				richTextBox_message.AppendText(me.Text + "\r\n");
-				DynValue res = new DynValue();
-				try
+
+				if (me.Text == "clear") // magic words
 				{
-					res = script.DoString(me.Text);
+					richTextBox_message.Text = "";
 				}
-				catch (Exception err)
+				else // execute lua
 				{
-					Color temp = richTextBox_message.ForeColor;
-					richTextBox_message.SelectionColor = Color.Red;
-					richTextBox_message.AppendText("\r\nError: " + err.Message + "\r\n\r\n");
-					richTextBox_message.SelectionColor = temp;
+					try
+					{
+						script.DoString(me.Text);
+					}
+					catch (Exception err)
+					{
+						Color temp = richTextBox_message.ForeColor;
+						richTextBox_message.SelectionColor = Color.Red;
+						richTextBox_message.AppendText("\r\nError: " + err.Message + "\r\n\r\n");
+						richTextBox_message.SelectionColor = temp;
+					}
+					//viewBox.AppendText(res.Number + "\r\n");
 				}
-				//viewBox.AppendText(res.Number + "\r\n");
 				richTextBox_message.AppendText("> ");
 				richTextBox_message.ScrollToCaret();
 				me.Text = "";
