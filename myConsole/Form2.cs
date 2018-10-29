@@ -16,16 +16,5 @@ namespace myConsole
 		{
 			InitializeComponent();
 		}
-
-		public void foo(string msg, int x = 100, int y = 100)
-		{
-			a = new Label();
-			a.Parent = this;
-			a.Location = new Point(x, y);
-			a.Text = msg;
-			a.Show();
-		}
-
-		Label a;
 	}
 }

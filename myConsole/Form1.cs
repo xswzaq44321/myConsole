@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MoonSharp.Interpreter;
 using MetroFramework.Forms;
+using System.IO;
 
 namespace myConsole
 {
@@ -20,27 +21,19 @@ namespace myConsole
 			script.Options.DebugPrint = s => richTextBox_message.AppendText(s + "\r\n");
 			richTextBox_message.AppendText("> ");
 			this.ActiveControl = textbox_command;
-
+			
 			sub.Show();
 
-			timer1.Tick += (s, e) => { sub.label1.Text = obj.val.ToString(); };
+			loadScript();
+			loadMods();
 			timer1.Start();
 
-			//script.Globals["changeLocation"] = (Action<int, int>)((x, y) => richTextBox_message.Location = new Point(x, y));
-			//script.Globals["createForm"] = (Action)(() => { sub = new Form2(); sub.Show(); });
-			script.Globals["newLabel"] = (Action<string, int, int>)((string msg, int x, int y) => sub.foo(msg, x, y));
-
-			UserData.RegisterType<MyClass>();
-			DynValue luaObj = UserData.Create(obj);
-			script.Globals.Set("obj", luaObj);
-			script.DoFile(@"res\test.lua");
 		}
 
 		Script script = new Script();
 		List<string> prevCommands = new List<string>();
 		int prevCommandsIter = 0;
 		Form2 sub = new Form2();
-		MyClass obj = new MyClass();
 
 		private void commandBox_KeyDown(object sender, KeyEventArgs e)
 		{
@@ -111,25 +104,52 @@ namespace myConsole
 			richTextBox_message.SelectionColor = temp;
 			richTextBox_message.ScrollToCaret();
 		}
+
+		private void loadScript()
+		{
+			//script.Globals["changeLocation"] = (Action<int, int>)((x, y) => richTextBox_message.Location = new Point(x, y));
+			//script.Globals["createForm"] = (Action)(() => { sub = new Form2(); sub.Show(); });
+			script.Globals["newMyClass"] = (Func<string, int, int, Object>)((string msg, int x, int y) =>
+			{
+				MyClass bar = new MyClass();
+				bar.setText(msg);
+				bar.setPos(x, y);
+				bar.Parent = sub;
+				bar.Show();
+				return bar;
+			});
+			script.DoFile(@"res\timer.lua");
+			
+			timer1.Tick += (s, e) => { script.Call((script.Globals["timer"] as Table)["timeout"]); };
+		}
+
+		private void loadMods()
+		{
+			UserData.RegisterType<MyClass>();
+			string filepath = @"mods";
+			DirectoryInfo d = new DirectoryInfo(filepath);
+			
+			foreach (var file in d.GetFiles("*.lua"))
+			{
+				script.DoFile(file.FullName);
+			}
+		}
 	}
 
-	class MyClass
+	class MyClass: Label
 	{
 		public MyClass()
 		{
-			val = 100;
+			this.Font = new Font("DejaVu Sans Mono", 12, FontStyle.Bold);
+			this.AutoSize = true;
 		}
-
-		public int val;
-
-		public double CalcHypotenuse(double a, double b)
+		public void setPos(int x, int y)
 		{
-			return Math.Sqrt(a * a + b * b);
+			this.Location = new Point(x, y);
 		}
-
-		public static int foo()
+		public void setText(string msg)
 		{
-			return 10;
+			this.Text = msg;
 		}
 	}
 }
