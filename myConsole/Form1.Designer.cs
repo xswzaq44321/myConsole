@@ -28,24 +28,27 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.commandBox = new System.Windows.Forms.TextBox();
+			this.components = new System.ComponentModel.Container();
+			this.textbox_command = new System.Windows.Forms.TextBox();
 			this.richTextBox_message = new System.Windows.Forms.RichTextBox();
 			this.button_submit = new System.Windows.Forms.Button();
+			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
 			// 
-			// commandBox
+			// textbox_command
 			// 
-			this.commandBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+			this.textbox_command.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.commandBox.BackColor = System.Drawing.Color.MidnightBlue;
-			this.commandBox.Font = new System.Drawing.Font("DejaVu Sans Mono", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.commandBox.ForeColor = System.Drawing.Color.White;
-			this.commandBox.Location = new System.Drawing.Point(39, 593);
-			this.commandBox.Margin = new System.Windows.Forms.Padding(30, 15, 0, 30);
-			this.commandBox.Name = "commandBox";
-			this.commandBox.Size = new System.Drawing.Size(585, 28);
-			this.commandBox.TabIndex = 1;
-			this.commandBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.commandBox_KeyDown);
+			this.textbox_command.BackColor = System.Drawing.Color.MidnightBlue;
+			this.textbox_command.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.textbox_command.Font = new System.Drawing.Font("DejaVu Sans Mono", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.textbox_command.ForeColor = System.Drawing.Color.White;
+			this.textbox_command.Location = new System.Drawing.Point(39, 554);
+			this.textbox_command.Margin = new System.Windows.Forms.Padding(30, 15, 0, 30);
+			this.textbox_command.Name = "textbox_command";
+			this.textbox_command.Size = new System.Drawing.Size(585, 28);
+			this.textbox_command.TabIndex = 1;
+			this.textbox_command.KeyDown += new System.Windows.Forms.KeyEventHandler(this.commandBox_KeyDown);
 			// 
 			// richTextBox_message
 			// 
@@ -55,12 +58,12 @@
 			this.richTextBox_message.BackColor = System.Drawing.Color.MidnightBlue;
 			this.richTextBox_message.Font = new System.Drawing.Font("DejaVu Sans Mono", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.richTextBox_message.ForeColor = System.Drawing.Color.White;
-			this.richTextBox_message.Location = new System.Drawing.Point(39, 90);
+			this.richTextBox_message.Location = new System.Drawing.Point(39, 39);
 			this.richTextBox_message.Margin = new System.Windows.Forms.Padding(30, 30, 30, 0);
 			this.richTextBox_message.Name = "richTextBox_message";
 			this.richTextBox_message.ReadOnly = true;
 			this.richTextBox_message.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-			this.richTextBox_message.Size = new System.Drawing.Size(700, 488);
+			this.richTextBox_message.Size = new System.Drawing.Size(700, 500);
 			this.richTextBox_message.TabIndex = 2;
 			this.richTextBox_message.Text = "";
 			// 
@@ -69,26 +72,28 @@
 			this.button_submit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.button_submit.BackColor = System.Drawing.Color.MidnightBlue;
 			this.button_submit.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-			this.button_submit.Font = new System.Drawing.Font("Courier New", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.button_submit.Font = new System.Drawing.Font("DejaVu Sans Mono", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.button_submit.ForeColor = System.Drawing.Color.White;
-			this.button_submit.Location = new System.Drawing.Point(639, 593);
+			this.button_submit.Location = new System.Drawing.Point(639, 554);
 			this.button_submit.Margin = new System.Windows.Forms.Padding(15, 15, 30, 30);
+			this.button_submit.MaximumSize = new System.Drawing.Size(100, 28);
+			this.button_submit.MinimumSize = new System.Drawing.Size(100, 28);
 			this.button_submit.Name = "button_submit";
 			this.button_submit.Size = new System.Drawing.Size(100, 28);
 			this.button_submit.TabIndex = 3;
 			this.button_submit.Text = "submit";
 			this.button_submit.UseVisualStyleBackColor = false;
+			this.button_submit.Click += new System.EventHandler(this.button_submit_Click);
 			// 
 			// console
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(778, 660);
+			this.ClientSize = new System.Drawing.Size(778, 621);
 			this.Controls.Add(this.button_submit);
 			this.Controls.Add(this.richTextBox_message);
-			this.Controls.Add(this.commandBox);
+			this.Controls.Add(this.textbox_command);
 			this.Name = "console";
-			this.Style = MetroFramework.MetroColorStyle.Blue;
 			this.Text = "lua console";
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -96,9 +101,10 @@
 		}
 
 		#endregion
-		private System.Windows.Forms.TextBox commandBox;
+		private System.Windows.Forms.TextBox textbox_command;
 		private System.Windows.Forms.RichTextBox richTextBox_message;
 		private System.Windows.Forms.Button button_submit;
+		private System.Windows.Forms.Timer timer1;
 	}
 }
 
