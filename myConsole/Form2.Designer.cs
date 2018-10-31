@@ -32,10 +32,9 @@
 			// 
 			// Form2
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(784, 561);
-			this.Margin = new System.Windows.Forms.Padding(2);
+			this.ClientSize = new System.Drawing.Size(1176, 842);
 			this.Name = "Form2";
 			this.Text = "Form2";
 			this.ResumeLayout(false);

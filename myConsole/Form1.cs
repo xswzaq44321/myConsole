@@ -21,7 +21,7 @@ namespace myConsole
 			script.Options.DebugPrint = s => richTextBox_message.AppendText(s + "\r\n");
 			richTextBox_message.AppendText("> ");
 			this.ActiveControl = textbox_command;
-			
+
 			sub.Show();
 
 			loadScript();
@@ -118,9 +118,26 @@ namespace myConsole
 				bar.Show();
 				return bar;
 			});
-			script.DoFile(@"res\timer.lua");
-			
-			timer1.Tick += (s, e) => { script.Call((script.Globals["timer"] as Table)["timeout"]); };
+
+			UserData.RegisterType<MyClass>();
+			string filepath = @"res";
+			DirectoryInfo d = new DirectoryInfo(filepath);
+
+			foreach (var file in d.GetFiles("*.lua"))
+			{
+				script.DoFile(file.FullName);
+			}
+
+			Table defines = script.Globals["defines"] as Table;
+			Table events = defines["events"] as Table;
+
+			timer1.Tick += (s, e) =>
+			{
+				foreach(var func in (events["on_tick"] as Table).Values)
+				{
+					script.Call(func);
+				}
+			};
 		}
 
 		private void loadMods()
@@ -128,15 +145,15 @@ namespace myConsole
 			UserData.RegisterType<MyClass>();
 			string filepath = @"mods";
 			DirectoryInfo d = new DirectoryInfo(filepath);
-			
-			foreach (var file in d.GetFiles("*.lua"))
+
+			foreach (var mods in d.GetDirectories())
 			{
-				script.DoFile(file.FullName);
+				script.DoFile(mods.GetFiles("control.lua")[0].FullName);
 			}
 		}
 	}
 
-	class MyClass: Label
+	class MyClass : Label
 	{
 		public MyClass()
 		{
