@@ -18,9 +18,6 @@ namespace myConsole
 		public console()
 		{
 			InitializeComponent();
-			script.Options.DebugPrint = s => richTextBox_message.AppendText(s + "\r\n");
-			richTextBox_message.AppendText("> ");
-			this.ActiveControl = textbox_command;
 
 			sub.Show();
 
@@ -28,6 +25,9 @@ namespace myConsole
 			loadMods();
 			timer1.Start();
 
+			this.ActiveControl = textbox_command;
+			script.Options.DebugPrint = s => printMessage(s);
+			richTextBox_message.AppendText("> ");
 		}
 
 		Script script = new Script();
@@ -74,7 +74,7 @@ namespace myConsole
 
 			if (me.Text == "clear") // magic words
 			{
-				richTextBox_message.Text = "";
+				richTextBox_message.Text = "> ";
 			}
 			else // execute lua
 			{
@@ -84,23 +84,24 @@ namespace myConsole
 				}
 				catch (Exception err)
 				{
-					printMessage("Error: " + err.Message + "\r\n\r\n", Color.Red);
+					printMessage("Error: " + err.Message, Color.Red);
 				}
 				//viewBox.AppendText(res.Number + "\r\n");
 			}
-			richTextBox_message.AppendText("> ");
+			richTextBox_message.AppendText("\r\n> ");
 			me.Text = "";
 		}
 
 		public void printMessage(string message)
 		{
-			richTextBox_message.AppendText("\r\n" + message);
+			richTextBox_message.AppendText(message + "\r\n");
+			richTextBox_message.ScrollToCaret();
 		}
 		public void printMessage(string message, Color color)
 		{
-			Color temp = richTextBox_message.ForeColor;
+			Color temp = richTextBox_message.SelectionColor;
 			richTextBox_message.SelectionColor = color;
-			richTextBox_message.AppendText("\r\n" + message);
+			richTextBox_message.AppendText(message + "\r\n");
 			richTextBox_message.SelectionColor = temp;
 			richTextBox_message.ScrollToCaret();
 		}
@@ -133,7 +134,7 @@ namespace myConsole
 
 			timer1.Tick += (s, e) =>
 			{
-				foreach(var func in (events["on_tick"] as Table).Values)
+				foreach (var func in (events["on_tick"] as Table).Values)
 				{
 					script.Call(func);
 				}
@@ -148,7 +149,14 @@ namespace myConsole
 
 			foreach (var mods in d.GetDirectories())
 			{
-				script.DoFile(mods.GetFiles("control.lua")[0].FullName);
+				try
+				{
+					script.DoFile(mods.GetFiles("control.lua")[0].FullName);
+				}
+				catch (IndexOutOfRangeException)
+				{
+					printMessage(string.Format("Error! Fail to load mod: \"{0}\"", mods.Name), Color.Red);
+				}
 			}
 		}
 	}
