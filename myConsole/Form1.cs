@@ -126,19 +126,41 @@ namespace myConsole
 
 			foreach (var file in d.GetFiles("*.lua"))
 			{
-				script.DoFile(file.FullName);
+				try
+				{
+					script.DoFile(file.FullName);
+				}
+				catch(InterpreterException luaExcept)
+				{
+					printMessage("LUA ERROR: " + luaExcept.Message, Color.Red);
+				}
+				catch (Exception exception)
+				{
+					printMessage("C# ERROR: " + exception, Color.Red);
+				}
 			}
 
-			Table defines = script.Globals["defines"] as Table;
-			Table events = defines["events"] as Table;
-
-			timer1.Tick += (s, e) =>
+			try
 			{
-				foreach (var func in (events["on_tick"] as Table).Values)
+				Table defines = script.Globals["defines"] as Table;
+				Table events = defines["events"] as Table;
+
+				timer1.Tick += (s, e) =>
 				{
-					script.Call(func);
-				}
-			};
+					foreach (var func in (events["on_tick"] as Table).Values)
+					{
+						script.Call(func);
+					}
+				};
+			}
+			catch (InterpreterException luaExcept)
+			{
+				printMessage("LUA ERROR: " + luaExcept.Message, Color.Red);
+			}
+			catch (Exception exception)
+			{
+				printMessage("C# ERROR: " + exception, Color.Red);
+			}
 		}
 
 		private void loadMods()
@@ -153,9 +175,9 @@ namespace myConsole
 				{
 					script.DoFile(mods.GetFiles("control.lua")[0].FullName);
 				}
-				catch (IndexOutOfRangeException)
+				catch (InterpreterException luaExcept)
 				{
-					printMessage(string.Format("Error! Fail to load mod: \"{0}\"", mods.Name), Color.Red);
+					printMessage(string.Format("LUA ERROR: " + "Error! Fail to load mod: \"{0}\" \r\n{1}", mods.Name, luaExcept.Message), Color.Red);
 				}
 			}
 		}
